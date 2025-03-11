@@ -1,15 +1,24 @@
+safe-quote
+========
+[![crates.io version](https://img.shields.io/crates/v/safe-quote.svg)](https://crates.io/crates/safe-quote)
+[![unsafe forbidden](https://raw.githubusercontent.com/mleonhard/safe-quote/main/unsafe-forbidden-success.svg)](https://github.com/rust-secure-code/safety-dance/)
+[![pipeline status](https://github.com/mleonhard/safe-quote/workflows/CI/badge.svg)](https://github.com/mleonhard/safe-quote/actions)
+[![Rust Documentation](https://img.shields.io/badge/api-rustdoc-blue.svg)](https://docs.rs/safe-quote)
+
+This is a fork of [`quote`](https://crates.io/crates/quote) that
+adds `forbid(unsafe_code)` and
+depends on [`safe-proc-macro2`](https://crates.io/crates/safe-proc-macro2)
+instead of [`proc-macro2`](https://crates.io/crates/proc-macro2).
+
+----
+
 Rust Quasi-Quoting
 ==================
-
-[<img alt="github" src="https://img.shields.io/badge/github-dtolnay/quote-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/dtolnay/quote)
-[<img alt="crates.io" src="https://img.shields.io/crates/v/quote.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/quote)
-[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-quote-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs" height="20">](https://docs.rs/quote)
-[<img alt="build status" src="https://img.shields.io/github/actions/workflow/status/dtolnay/quote/ci.yml?branch=master&style=for-the-badge" height="20">](https://github.com/dtolnay/quote/actions?query=branch%3Amaster)
 
 This crate provides the [`quote!`] macro for turning Rust syntax tree data
 structures into tokens of source code.
 
-[`quote!`]: https://docs.rs/quote/1.0/quote/macro.quote.html
+[`quote!`]: https://docs.rs/safe-quote/1.0/safe_quote/macro.quote.html
 
 Procedural macros in Rust receive a stream of tokens as input, execute arbitrary
 Rust code to determine how to manipulate those tokens, and produce a stream of
@@ -31,7 +40,7 @@ macros.
 
 ```toml
 [dependencies]
-quote = "1.0"
+safe-quote = "1.0"
 ```
 
 *Version requirement: Quote supports rustc 1.56 and up.*<br>
@@ -45,13 +54,13 @@ The quote crate provides a [`quote!`] macro within which you can write Rust code
 that gets packaged into a [`TokenStream`] and can be treated as data. You should
 think of `TokenStream` as representing a fragment of Rust source code.
 
-[`TokenStream`]: https://docs.rs/proc-macro2/1.0/proc_macro2/struct.TokenStream.html
+[`TokenStream`]: https://docs.rs/safe-proc-macro2/1.0/safe_proc_macro2/struct.TokenStream.html
 
 Within the `quote!` macro, interpolation is done with `#var`. Any type
-implementing the [`quote::ToTokens`] trait can be interpolated. This includes
+implementing the [`safe_quote::ToTokens`] trait can be interpolated. This includes
 most Rust primitive types as well as most of the syntax tree types from [`syn`].
 
-[`quote::ToTokens`]: https://docs.rs/quote/1.0/quote/trait.ToTokens.html
+[`safe_quote::ToTokens`]: https://docs.rs/safe-quote/1.0/safe_quote/trait.ToTokens.html
 [`syn`]: https://github.com/dtolnay/syn
 
 ```rust
@@ -100,14 +109,14 @@ does not produce a trailing comma. This matches the behavior of delimiters in
 ## Returning tokens to the compiler
 
 The `quote!` macro evaluates to an expression of type
-`proc_macro2::TokenStream`. Meanwhile Rust procedural macros are expected to
+`safe_proc_macro2::TokenStream`. Meanwhile Rust procedural macros are expected to
 return the type `proc_macro::TokenStream`.
 
 The difference between the two types is that `proc_macro` types are entirely
 specific to procedural macros and cannot ever exist in code outside of a
-procedural macro, while `proc_macro2` types may exist anywhere including tests
+procedural macro, while `safe_proc_macro2` types may exist anywhere including tests
 and non-macro code like main.rs and build.rs. This is why even the procedural
-macro ecosystem is largely built around `proc_macro2`, because that ensures the
+macro ecosystem is largely built around `safe_proc_macro2`, because that ensures the
 libraries are unit testable and accessible in non-macro contexts.
 
 There is a [`From`]-conversion in both directions so returning the output of
@@ -165,7 +174,7 @@ quote! {
 }
 ```
 
-Alternatively, the APIs provided by Syn and proc-macro2 can be used to directly
+Alternatively, the APIs provided by Syn and safe-proc-macro2 can be used to directly
 build the identifier. This is roughly equivalent to the above, but will not
 handle `ident` being a raw identifier.
 
@@ -220,7 +229,7 @@ Any interpolated tokens preserve the `Span` information provided by their
 `ToTokens` implementation. Tokens that originate within a `quote!` invocation
 are spanned with [`Span::call_site()`].
 
-[`Span::call_site()`]: https://docs.rs/proc-macro2/1.0/proc_macro2/struct.Span.html#method.call_site
+[`Span::call_site()`]: https://docs.rs/safe-proc-macro2/1.0/safe_proc_macro2/struct.Span.html#method.call_site
 
 A different span can be provided explicitly through the [`quote_spanned!`]
 macro.

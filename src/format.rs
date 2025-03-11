@@ -30,7 +30,7 @@
 /// * [`Ident`] arguments will have their `r#` prefixes stripped, if present.
 ///
 /// [`IdentFragment`]: crate::IdentFragment
-/// [`Ident`]: proc_macro2::Ident
+/// [`Ident`]: safe_proc_macro2::Ident
 ///
 /// <br>
 ///
@@ -41,7 +41,7 @@
 /// provided.
 ///
 /// ```
-/// # use quote::format_ident;
+/// # use safe_quote::format_ident;
 /// # let ident = format_ident!("Ident");
 /// // If `ident` is an Ident, the span of `my_ident` will be inherited from it.
 /// let my_ident = format_ident!("My{}{}", ident, "IsCool");
@@ -52,16 +52,16 @@
 /// argument.
 ///
 /// ```
-/// # use quote::format_ident;
+/// # use safe_quote::format_ident;
 /// # const IGNORE_TOKENS: &'static str = stringify! {
 /// let my_span = /* ... */;
 /// # };
-/// # let my_span = proc_macro2::Span::call_site();
+/// # let my_span = safe_proc_macro2::Span::call_site();
 /// format_ident!("MyIdent", span = my_span);
 /// ```
 ///
-/// [`Span`]: proc_macro2::Span
-/// [`Span::call_site`]: proc_macro2::Span::call_site
+/// [`Span`]: safe_proc_macro2::Span
+/// [`Span::call_site`]: safe_proc_macro2::Span::call_site
 ///
 /// <p><br></p>
 ///
@@ -76,7 +76,7 @@
 ///
 /// Composing raw and non-raw identifiers:
 /// ```
-/// # use quote::format_ident;
+/// # use safe_quote::format_ident;
 /// let my_ident = format_ident!("My{}", "Ident");
 /// assert_eq!(my_ident, "MyIdent");
 ///
@@ -89,7 +89,7 @@
 ///
 /// Integer formatting options:
 /// ```
-/// # use quote::format_ident;
+/// # use safe_quote::format_ident;
 /// let num: u32 = 10;
 ///
 /// let decimal = format_ident!("Id_{}", num);

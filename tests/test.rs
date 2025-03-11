@@ -8,15 +8,15 @@
 
 extern crate proc_macro;
 
-use proc_macro2::{Delimiter, Group, Ident, Span, TokenStream};
-use quote::{format_ident, quote, quote_spanned, TokenStreamExt};
+use safe_proc_macro2::{Delimiter, Group, Ident, Span, TokenStream};
+use safe_quote::{format_ident, quote, quote_spanned, TokenStreamExt};
 use std::borrow::Cow;
 use std::collections::BTreeSet;
 use std::ffi::{CStr, CString};
 
 struct X;
 
-impl quote::ToTokens for X {
+impl safe_quote::ToTokens for X {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.append(Ident::new("X", Span::call_site()));
     }

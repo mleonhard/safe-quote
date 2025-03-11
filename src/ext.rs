@@ -1,6 +1,6 @@
 use super::ToTokens;
 use core::iter;
-use proc_macro2::{TokenStream, TokenTree};
+use safe_proc_macro2::{TokenStream, TokenTree};
 
 /// TokenStream extension trait with methods for appending tokens.
 ///
@@ -16,8 +16,8 @@ pub trait TokenStreamExt: private::Sealed {
     /// For use by `ToTokens` implementations.
     ///
     /// ```
-    /// # use quote::{quote, TokenStreamExt, ToTokens};
-    /// # use proc_macro2::TokenStream;
+    /// # use safe_quote::{quote, TokenStreamExt, ToTokens};
+    /// # use safe_proc_macro2::TokenStream;
     /// #
     /// struct X;
     ///
@@ -102,7 +102,7 @@ impl TokenStreamExt for TokenStream {
 }
 
 mod private {
-    use proc_macro2::TokenStream;
+    use safe_proc_macro2::TokenStream;
 
     pub trait Sealed {}
 

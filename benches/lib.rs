@@ -4,7 +4,7 @@
     clippy::uninlined_format_args
 )]
 
-use quote::quote;
+use safe_quote::quote;
 
 #[allow(unused_macros)]
 macro_rules! benchmark {
@@ -12,11 +12,11 @@ macro_rules! benchmark {
         mod timer;
 
         use proc_macro::TokenStream;
-        use proc_macro2::Ident;
+        use safe_proc_macro2::Ident;
 
         #[proc_macro]
         pub fn run_quote_benchmark(input: TokenStream) -> TokenStream {
-            let input = proc_macro2::TokenStream::from(input);
+            let input = safe_proc_macro2::TokenStream::from(input);
             let span = input.into_iter().next().unwrap().span();
             let $ident = Ident::new("Response", span);
             timer::time("macro", || proc_macro::TokenStream::from($quote));
