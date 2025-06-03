@@ -1,10 +1,9 @@
-//! [![github]](https://github.com/dtolnay/quote)&ensp;[![crates-io]](https://crates.io/crates/quote)&ensp;[![docs-rs]](https://docs.rs/quote)
+//! This is a fork of [`quote`](https://crates.io/crates/quote) that
+//! adds `forbid(unsafe_code)` and
+//! depends on [`safe-proc-macro2`](https://crates.io/crates/safe-proc-macro2)
+//! instead of [`proc-macro2`](https://crates.io/crates/proc-macro2).
 //!
-//! [github]: https://img.shields.io/badge/github-8da0cb?style=for-the-badge&labelColor=555555&logo=github
-//! [crates-io]: https://img.shields.io/badge/crates.io-fc8d62?style=for-the-badge&labelColor=555555&logo=rust
-//! [docs-rs]: https://img.shields.io/badge/docs.rs-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs
-//!
-//! <br>
+//! ----
 //!
 //! This crate provides the [`quote!`] macro for turning Rust syntax tree data
 //! structures into tokens of source code.
@@ -29,7 +28,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! quote = "1.0"
+//! safe-quote = "1.0"
 //! ```
 //!
 //! <br>
@@ -46,7 +45,7 @@
 //! [a]: https://serde.rs/
 //!
 //! ```
-//! # use quote::quote;
+//! # use safe_quote::quote;
 //! #
 //! # let generics = "";
 //! # let where_clause = "";
@@ -81,15 +80,16 @@
 //!
 //! # Non-macro code generators
 //!
-//! When using `quote` in a build.rs or main.rs and writing the output out to a
+//! When using `safe_quote` in a build.rs or main.rs and writing the output out to a
 //! file, consider having the code generator pass the tokens through
 //! [prettyplease] before writing. This way if an error occurs in the generated
 //! code it is convenient for a human to read and debug.
 //!
 //! [prettyplease]: https://github.com/dtolnay/prettyplease
+#![forbid(unsafe_code)]
 
 // Quote types in rustdoc of other crates get linked to here.
-#![doc(html_root_url = "https://docs.rs/quote/1.0.40")]
+#![doc(html_root_url = "https://docs.rs/safe-quote/1.0.40")]
 #![allow(
     clippy::doc_markdown,
     clippy::elidable_lifetime_names,
@@ -129,7 +129,7 @@ macro_rules! __quote {
         /// The whole point.
         ///
         /// Performs variable interpolation against the input and produces it as
-        /// [`proc_macro2::TokenStream`].
+        /// [`safe_proc_macro2::TokenStream`].
         ///
         /// Note: for returning tokens to the compiler in a procedural macro, use
         /// `.into()` on the result to convert to [`proc_macro::TokenStream`].
@@ -166,7 +166,7 @@ macro_rules! __quote {
         /// `ToTokens` implementation. Tokens that originate within the `quote!`
         /// invocation are spanned with [`Span::call_site()`].
         ///
-        /// [`Span::call_site()`]: proc_macro2::Span::call_site
+        /// [`Span::call_site()`]: safe_proc_macro2::Span::call_site
         ///
         /// A different span can be provided through the [`quote_spanned!`] macro.
         ///
@@ -174,15 +174,15 @@ macro_rules! __quote {
         ///
         /// # Return type
         ///
-        /// The macro evaluates to an expression of type `proc_macro2::TokenStream`.
+        /// The macro evaluates to an expression of type `safe_proc_macro2::TokenStream`.
         /// Meanwhile Rust procedural macros are expected to return the type
         /// `proc_macro::TokenStream`.
         ///
         /// The difference between the two types is that `proc_macro` types are entirely
         /// specific to procedural macros and cannot ever exist in code outside of a
-        /// procedural macro, while `proc_macro2` types may exist anywhere including
+        /// procedural macro, while `safe_proc_macro2` types may exist anywhere including
         /// tests and non-macro code like main.rs and build.rs. This is why even the
-        /// procedural macro ecosystem is largely built around `proc_macro2`, because
+        /// procedural macro ecosystem is largely built around `safe_proc_macro2`, because
         /// that ensures the libraries are unit testable and accessible in non-macro
         /// contexts.
         ///
@@ -205,12 +205,12 @@ macro_rules! __quote {
         /// ```
         /// # #[cfg(any())]
         /// extern crate proc_macro;
-        /// # extern crate proc_macro2;
+        /// # extern crate safe_proc_macro2;
         ///
         /// # #[cfg(any())]
         /// use proc_macro::TokenStream;
-        /// # use proc_macro2::TokenStream;
-        /// use quote::quote;
+        /// # use safe_proc_macro2::TokenStream;
+        /// use safe_quote::quote;
         ///
         /// # const IGNORE_TOKENS: &'static str = stringify! {
         /// #[proc_macro_derive(HeapSize)]
@@ -249,7 +249,7 @@ macro_rules! __quote {
         /// interpolated into later `quote!` invocations to build up a final result.
         ///
         /// ```
-        /// # use quote::quote;
+        /// # use safe_quote::quote;
         /// #
         /// let type_definition = quote! {...};
         /// let methods = quote! {...};
@@ -273,8 +273,8 @@ macro_rules! __quote {
         /// continue to be two separate tokens as if you had written `_ x`.
         ///
         /// ```
-        /// # use proc_macro2::{self as syn, Span};
-        /// # use quote::quote;
+        /// # use safe_proc_macro2::{self as syn, Span};
+        /// # use safe_quote::quote;
         /// #
         /// # let ident = syn::Ident::new("i", Span::call_site());
         /// #
@@ -290,8 +290,8 @@ macro_rules! __quote {
         /// convenient utility for doing so correctly.
         ///
         /// ```
-        /// # use proc_macro2::{Ident, Span};
-        /// # use quote::{format_ident, quote};
+        /// # use safe_proc_macro2::{Ident, Span};
+        /// # use safe_quote::{format_ident, quote};
         /// #
         /// # let ident = Ident::new("i", Span::call_site());
         /// #
@@ -302,13 +302,13 @@ macro_rules! __quote {
         /// # ;
         /// ```
         ///
-        /// Alternatively, the APIs provided by Syn and proc-macro2 can be used to
+        /// Alternatively, the APIs provided by Syn and safe-proc-macro2 can be used to
         /// directly build the identifier. This is roughly equivalent to the above, but
         /// will not handle `ident` being a raw identifier.
         ///
         /// ```
-        /// # use proc_macro2::{self as syn, Span};
-        /// # use quote::quote;
+        /// # use safe_proc_macro2::{self as syn, Span};
+        /// # use safe_quote::quote;
         /// #
         /// # let ident = syn::Ident::new("i", Span::call_site());
         /// #
@@ -329,7 +329,7 @@ macro_rules! __quote {
         /// `field_type` of type `syn::Type` and want to invoke the constructor.
         ///
         /// ```
-        /// # use quote::quote;
+        /// # use safe_quote::quote;
         /// #
         /// # let field_type = quote!(...);
         /// #
@@ -347,7 +347,7 @@ macro_rules! __quote {
         /// but for macros often the following is more convenient.
         ///
         /// ```
-        /// # use quote::quote;
+        /// # use safe_quote::quote;
         /// #
         /// # let field_type = quote!(...);
         /// #
@@ -362,7 +362,7 @@ macro_rules! __quote {
         /// A similar pattern is appropriate for trait methods.
         ///
         /// ```
-        /// # use quote::quote;
+        /// # use safe_quote::quote;
         /// #
         /// # let field_type = quote!(...);
         /// #
@@ -397,8 +397,8 @@ macro_rules! __quote {
         /// formatting the doc string literal outside of quote.
         ///
         /// ```rust
-        /// # use proc_macro2::{Ident, Span};
-        /// # use quote::quote;
+        /// # use safe_proc_macro2::{Ident, Span};
+        /// # use safe_quote::quote;
         /// #
         /// # const IGNORE: &str = stringify! {
         /// let msg = format!(...);
@@ -435,12 +435,12 @@ macro_rules! __quote {
         /// ```
         ///
         /// ```
-        /// # use proc_macro2::{Ident, TokenStream};
-        /// # use quote::quote;
+        /// # use safe_proc_macro2::{Ident, TokenStream};
+        /// # use safe_quote::quote;
         /// #
         /// # mod syn {
-        /// #     use proc_macro2::{Literal, TokenStream};
-        /// #     use quote::{ToTokens, TokenStreamExt};
+        /// #     use safe_proc_macro2::{Literal, TokenStream};
+        /// #     use safe_quote::{ToTokens, TokenStreamExt};
         /// #
         /// #     pub struct Index(usize);
         /// #
@@ -537,11 +537,11 @@ macro_rules! __quote_spanned {
         /// anything more than a few characters. There should be no space before the
         /// `=>` token.
         ///
-        /// [`Span`]: proc_macro2::Span
+        /// [`Span`]: safe_proc_macro2::Span
         ///
         /// ```
-        /// # use proc_macro2::Span;
-        /// # use quote::quote_spanned;
+        /// # use safe_proc_macro2::Span;
+        /// # use safe_quote::quote_spanned;
         /// #
         /// # const IGNORE_TOKENS: &'static str = stringify! {
         /// let span = /* ... */;
@@ -581,8 +581,8 @@ macro_rules! __quote_spanned {
         /// safely shared between threads.
         ///
         /// ```
-        /// # use quote::{quote_spanned, TokenStreamExt, ToTokens};
-        /// # use proc_macro2::{Span, TokenStream};
+        /// # use safe_quote::{quote_spanned, TokenStreamExt, ToTokens};
+        /// # use safe_proc_macro2::{Span, TokenStream};
         /// #
         /// # struct Type;
         /// #

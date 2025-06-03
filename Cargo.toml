@@ -1,19 +1,19 @@
 [package]
-name = "quote"
+name = "safe-quote"
 version = "1.0.40"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 autobenches = false
 categories = ["development-tools::procedural-macro-helpers"]
 description = "Quasi-quoting macro quote!(...)"
-documentation = "https://docs.rs/quote/"
+documentation = "https://docs.rs/safe-quote/"
 edition = "2018"
 keywords = ["macros", "syn"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/dtolnay/quote"
+repository = "https://github.com/mleonhard/safe-quote"
 rust-version = "1.56"
 
 [dependencies]
-proc-macro2 = { version = "1.0.80", default-features = false }
+safe-proc-macro2 = { version = "1.0.94", default-features = false }
 
 [dev-dependencies]
 rustversion = "1.0"
@@ -23,7 +23,7 @@ trybuild = { version = "1.0.66", features = ["diff"] }
 default = ["proc-macro"]
 # Disabling the proc-macro feature removes the dynamic library dependency on
 # libproc_macro in the rustc compiler.
-proc-macro = ["proc-macro2/proc-macro"]
+proc-macro = ["safe-proc-macro2/proc-macro"]
 
 [workspace]
 members = ["benches"]
