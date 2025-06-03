@@ -1,4 +1,4 @@
-use quote::quote;
+use safe_quote::quote;
 use std::net::Ipv4Addr;
 
 fn main() {

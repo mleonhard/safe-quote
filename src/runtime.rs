@@ -3,7 +3,7 @@ use crate::{IdentFragment, ToTokens, TokenStreamExt};
 use core::fmt;
 use core::iter;
 use core::ops::BitOr;
-use proc_macro2::{Group, Ident, Punct, Spacing, TokenTree};
+use safe_proc_macro2::{Group, Ident, Punct, Spacing, TokenTree};
 
 #[doc(hidden)]
 pub use alloc::format;
@@ -11,11 +11,11 @@ pub use alloc::format;
 pub use core::option::Option;
 
 #[doc(hidden)]
-pub type Delimiter = proc_macro2::Delimiter;
+pub type Delimiter = safe_proc_macro2::Delimiter;
 #[doc(hidden)]
-pub type Span = proc_macro2::Span;
+pub type Span = safe_proc_macro2::Span;
 #[doc(hidden)]
-pub type TokenStream = proc_macro2::TokenStream;
+pub type TokenStream = safe_proc_macro2::TokenStream;
 
 #[doc(hidden)]
 pub struct HasIterator; // True
@@ -197,8 +197,8 @@ pub fn get_span<T>(span: T) -> GetSpan<T> {
 
 mod get_span {
     use core::ops::Deref;
-    use proc_macro2::extra::DelimSpan;
-    use proc_macro2::Span;
+    use safe_proc_macro2::extra::DelimSpan;
+    use safe_proc_macro2::Span;
 
     pub struct GetSpan<T>(pub(crate) GetSpanInner<T>);
 

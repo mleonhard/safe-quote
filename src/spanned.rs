@@ -1,6 +1,6 @@
 use crate::ToTokens;
-use proc_macro2::extra::DelimSpan;
-use proc_macro2::{Span, TokenStream};
+use safe_proc_macro2::extra::DelimSpan;
+use safe_proc_macro2::{Span, TokenStream};
 
 // Not public API other than via the syn crate. Use syn::spanned::Spanned.
 pub trait Spanned: private::Sealed {
@@ -40,8 +40,8 @@ fn join_spans(tokens: TokenStream) -> Span {
 
 mod private {
     use crate::ToTokens;
-    use proc_macro2::extra::DelimSpan;
-    use proc_macro2::Span;
+    use safe_proc_macro2::extra::DelimSpan;
+    use safe_proc_macro2::Span;
 
     pub trait Sealed {}
     impl Sealed for Span {}

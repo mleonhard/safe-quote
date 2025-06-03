@@ -15,6 +15,6 @@ name = "quote-benchmark"
 path = "main.rs"
 
 [dependencies]
-proc-macro2 = "1.0"
-quote = { path = ".." }
+safe-proc-macro2 = "1.0"
+safe-quote = { path = ".." }
 termcolor = "1.1"

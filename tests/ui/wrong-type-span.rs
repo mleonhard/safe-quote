@@ -1,4 +1,4 @@
-use quote::quote_spanned;
+use safe_quote::quote_spanned;
 
 fn main() {
     let span = "";

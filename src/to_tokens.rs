@@ -2,7 +2,7 @@ use super::TokenStreamExt;
 use alloc::borrow::Cow;
 use alloc::rc::Rc;
 use core::iter;
-use proc_macro2::{Group, Ident, Literal, Punct, Span, TokenStream, TokenTree};
+use safe_proc_macro2::{Group, Ident, Literal, Punct, Span, TokenStream, TokenTree};
 use std::ffi::{CStr, CString};
 
 /// Types that can be interpolated inside a `quote!` invocation.
@@ -18,8 +18,8 @@ pub trait ToTokens {
     /// `std::cmp::PartialEq`:
     ///
     /// ```
-    /// use proc_macro2::{TokenTree, Spacing, Span, Punct, TokenStream};
-    /// use quote::{TokenStreamExt, ToTokens};
+    /// use safe_proc_macro2::{TokenTree, Spacing, Span, Punct, TokenStream};
+    /// use safe_quote::{TokenStreamExt, ToTokens};
     ///
     /// pub struct Path {
     ///     pub global: bool,
