@@ -21,11 +21,7 @@ note: the traits `Iterator` and `ToTokens` must be implemented
   |
   | pub trait ToTokens {
   | ^^^^^^^^^^^^^^^^^^
-  |
- ::: $RUST/core/src/iter/traits/iterator.rs
-  |
-  | pub trait Iterator {
-  | ^^^^^^^^^^^^^^^^^^
+ --> $RUST/core/src/iter/traits/iterator.rs
   = help: items from traits can only be used if the trait is implemented and in scope
   = note: the following traits define an item `quote_into_iter`, perhaps you need to implement one of them:
           candidate #1: `ext::RepAsIteratorExt`
